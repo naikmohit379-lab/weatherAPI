@@ -8,9 +8,57 @@
 </head>
 <body>
     <header class="bg-purple-700 p-4 text-center">
-        <h1 class="text-2xl font-bold">Weather Forecast App</h1>
-        <p class="text-sm mt-1 text-amber-300">Search weather of city or use current location</p>
+        <h1 class="text-2xl font-bold text-white" >Weather Forecast App</h1>
+        <p class="text-sm mt-1 text-white">Search weather of city or use current location</p>
     </header>
+    <main>
+        <!-- Search section -->
+        <section class="bg-purple-700 p-4 rounded mb-6">
+            <div class="flex flex-col md:flex-row gap-3">
+                <input 
+                    type="text" 
+                    id="cityInput" 
+                    placeholder="Enter city name"
+                    class="flex-1 p-2 rounded text-black"
+                >
+
+                <button 
+                    id="searchBtn"
+                    class="bg-blue-600 px-4 py-2 rounded"
+                >
+                    Search
+                </button>
+
+                <button 
+                    id="locationBtn"
+                    class="bg-green-600 px-4 py-2 rounded"
+                >
+                    Current Location
+                </button>
+            </div>
+
+            <div class="mt-3">
+                <button 
+                    id="recentBtn"
+                    class="hidden bg-slate-700 px-3 py-2 rounded"
+                >
+                    Recent Cities
+                </button>
+
+                <div 
+                    id="recentDropdown"
+                    class="hidden mt-2 bg-slate-700 p-2 rounded space-y-2"
+                ></div>
+            </div>
+
+            <p 
+                id="errorMessage"
+                class="hidden mt-3 bg-red-900/50 text-red-200 p-2 rounded"
+            ></p>
+        </section>
+
+        
+    </main>
     
 
 
