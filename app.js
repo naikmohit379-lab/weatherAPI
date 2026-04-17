@@ -179,3 +179,17 @@ async function getWeatherByLocation(lat, lon) {
         showError("Unable to fetch weather for your location.");
     }
 }
+toggleUnitBtn.addEventListener("click", function () {
+    if (currentTempCelsius === null) return;
+
+    if (isCelsius) {
+        let tempF = (currentTempCelsius * 9 / 5) + 32;
+        temperature.textContent = tempF.toFixed(1) + "°F";
+        toggleUnitBtn.textContent = "Switch to °C";
+        isCelsius = false;
+    } else {
+        temperature.textContent = currentTempCelsius.toFixed(1) + "°C";
+        toggleUnitBtn.textContent = "Switch to °F";
+        isCelsius = true;
+    }
+});
