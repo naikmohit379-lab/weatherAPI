@@ -11,4 +11,21 @@
 - javascript
 - Openweather API
 - Browser geolocation API
+
+## Features
+
+- Search weather by **city name**
+- Get weather for **current location** using browser geolocation
+- Display **current weather**:
+  - City name and country
+  - Temperature in °C (with toggle between °C and °F for today)
+  - Weather description
+  - Humidity
+  - Wind speed
+  - Condition (e.g., Clear, Clouds, Rain)
+- Display **5-day forecast** (one card per day with date, temp, wind, humidity, and condition)
+- **Recent cities dropdown** using `localStorage`
+- Simple **input validation** for empty city name
+- Friendly **error messages** on the UI (no JavaScript alert boxes)
+- **Custom alert** for extreme heat (above 40°C)
  
