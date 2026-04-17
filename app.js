@@ -77,3 +77,32 @@ async function getWeatherByCity(city) {
         showError("Something went wrong while fetching weather data.");
     }
 }
+
+function displayCurrentWeather(data) {
+    let tempC = data.main.temp - 273.15;
+
+    currentTempCelsius = tempC;
+    isCelsius = true;
+
+    cityName.textContent = data.name + ", " + data.sys.country;
+    weatherDesc.textContent = data.weather[0].description;
+    temperature.textContent = tempC.toFixed(1) + "°C";
+    toggleUnitBtn.textContent = "Switch to °F";
+
+    humidity.textContent = data.main.humidity + "%";
+    wind.textContent = data.wind.speed + " m/s";
+    condition.textContent = data.weather[0].main;
+
+    if (tempC > 40) {
+        weatherAlert.textContent = "Warning: Extreme temperature above 40°C";
+        weatherAlert.classList.remove("hidden");
+    } else {
+        weatherAlert.classList.add("hidden");
+    }
+
+    if (data.weather[0].main.toLowerCase().includes("rain")) {
+        body.className = "bg-slate-700 text-white min-h-screen";
+    } else {
+        body.className = "bg-slate-900 text-white min-h-screen";
+    }
+}
