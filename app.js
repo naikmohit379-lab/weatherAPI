@@ -50,7 +50,7 @@ async function getWeatherByCity(city) {
 
     try {
         let currentResponse = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
+            `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`
         );
 
         if (!currentResponse.ok) {
@@ -155,7 +155,7 @@ async function getWeatherByLocation(lat, lon) {
 
     try {
         let currentResponse = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
+            `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`
         );
 
         if (!currentResponse.ok) {
@@ -166,7 +166,7 @@ async function getWeatherByLocation(lat, lon) {
         let currentData = await currentResponse.json();
 
         let forecastResponse = await fetch(
-            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
+             `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
         );
 
         let forecastData = await forecastResponse.json();
