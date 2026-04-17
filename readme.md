@@ -35,3 +35,7 @@
 - OpenWeatherMap API: https://openweathermap.org/api  
 - Current weather endpoint: https://api.openweathermap.org/data/2.5/weather  
 - 5-day / 3-hour forecast endpoint: https://api.openweathermap.org/data/2.5/forecast [web:33][web:36]
+
+
+## github link
+https://github.com/naikmohit379-lab/weatherAPI
