@@ -171,12 +171,6 @@ function displayCurrentWeather(data) {
         weatherAlert.classList.add("hidden");
     }
 
-    // Change background if weather is rainy
-    if (data.weather[0].main.toLowerCase().includes("rain")) {
-        body.className = "bg-slate-700 text-white min-h-screen";
-    } else {
-        body.className = "bg-slate-900 text-white min-h-screen";
-    }
 }
 
 // Show 5-day forecast on the page
@@ -198,12 +192,12 @@ function displayForecast(data) {
             let temp = item.main.temp.toFixed(1);
 
             forecastContainer.innerHTML += `
-                <div class="bg-slate-700 p-3 rounded text-center">
-                    <p class="font-semibold">${date}</p>
-                    <p class="mt-2">Temp: ${temp}°C</p>
-                    <p>Wind: ${item.wind.speed} m/s</p>
-                    <p>Humidity: ${item.main.humidity}%</p>
-                    <p class="mt-1 text-sm">${item.weather[0].main}</p>
+                <div class="bg-white p-3 rounded text-center">
+                    <p class="text-black font-semibold">${date}</p>
+                    <p class="mt-2 text-black">Temp: ${temp}°C</p>
+                    <p class="text-black">Wind: ${item.wind.speed} m/s</p>
+                    <p class="text-black">Humidity: ${item.main.humidity}%</p>
+                    <p class="mt-1 text-sm text-black">${item.weather[0].main}</p>
                 </div>
             `;
         }
@@ -261,7 +255,7 @@ function loadRecentCities() {
     for (let i = 0; i < recentCities.length; i++) {
         let btn = document.createElement("button");
         btn.textContent = recentCities[i];
-        btn.className = "block w-full text-left px-3 py-2 bg-slate-600 rounded hover:bg-slate-500";
+        btn.className = "block w-full text-left px-3 py-2 bg-white text-black rounded hover:text-red-700";
 
         btn.addEventListener("click", function () {
             cityInput.value = recentCities[i];
