@@ -87,14 +87,14 @@ function displayCurrentWeather(data) {
     cityName.textContent = data.name + ", " + data.sys.country;
     weatherDesc.textContent = data.weather[0].description;
     temperature.textContent = tempC.toFixed(1) + "°C";
-    toggleUnitBtn.textContent = "Switch to °F";
+    toggleUnitBtn.textContent = "switch to °F";
 
     humidity.textContent = data.main.humidity + "%";
     wind.textContent = data.wind.speed + " m/s";
     condition.textContent = data.weather[0].main;
 
     if (tempC > 40) {
-        weatherAlert.textContent = "Warning: Extreme temperature above 40°C";
+        weatherAlert.textContent = "Warning: extreme temperature above 40°C";
         weatherAlert.classList.remove("hidden");
     } else {
         weatherAlert.classList.add("hidden");
@@ -104,5 +104,32 @@ function displayCurrentWeather(data) {
         body.className = "bg-slate-700 text-white min-h-screen";
     } else {
         body.className = "bg-slate-900 text-white min-h-screen";
+    }
+}
+function displayForecast(data) {
+    forecastContainer.innerHTML = "";
+
+    let forecastList = data.list;
+    let shownDates = [];
+
+    for (let i = 0; i < forecastList.length; i++) {
+        let item = forecastList[i];
+        let date = item.dt_txt.split(" ")[0];
+
+        if (!shownDates.includes(date) && shownDates.length < 5) {
+            shownDates.push(date);
+
+            let temp = (item.main.temp - 273.15).toFixed(1);
+
+            forecastContainer.innerHTML += `
+                <div class="bg-slate-700 p-3 rounded text-center">
+                    <p class="font-semibold">${date}</p>
+                    <p class="mt-2">Temp: ${temp}°C</p>
+                    <p>Wind: ${item.wind.speed} m/s</p>
+                    <p>Humidity: ${item.main.humidity}%</p>
+                    <p class="mt-1 text-sm">${item.weather[0].main}</p>
+                </div>
+            `;
+        }
     }
 }
