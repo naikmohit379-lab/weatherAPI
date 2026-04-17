@@ -22,3 +22,14 @@ const body = document.getElementById("body");
 let currentTempCelsius = null;
 let isCelsius = true;
 let recentCities = JSON.parse(localStorage.getItem("recentCities")) || [];
+
+
+function showError(message) {
+    errorMessage.textContent = message;
+    errorMessage.classList.remove("hidden");
+}
+
+function clearError() {
+    errorMessage.textContent = "";
+    errorMessage.classList.add("hidden");
+}
