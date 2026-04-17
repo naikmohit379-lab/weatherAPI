@@ -33,3 +33,47 @@ function clearError() {
     errorMessage.textContent = "";
     errorMessage.classList.add("hidden");
 }
+
+searchBtn.addEventListener("click", function () {
+    let city = cityInput.value.trim();
+
+    if (city === "") {
+        showError("Please enter a city name.");
+        return;
+    }
+
+    getWeatherByCity(city);
+});
+
+async function getWeatherByCity(city) {
+    clearError();
+
+    try {
+        let currentResponse = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
+        );
+
+        if (!currentResponse.ok) {
+            showError("City not found. Please enter a valid city.");
+            return;
+        }
+
+        let currentData = await currentResponse.json();
+
+        let lat = currentData.coord.lat;
+        let lon = currentData.coord.lon;
+
+        let forecastResponse = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
+        );
+
+        let forecastData = await forecastResponse.json();
+
+        displayCurrentWeather(currentData);
+        displayForecast(forecastData);
+        saveRecentCity(city);
+
+    } catch (error) {
+        showError("Something went wrong while fetching weather data.");
+    }
+}
