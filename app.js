@@ -234,3 +234,7 @@ function loadRecentCities() {
         recentDropdown.appendChild(btn);
     }
 }
+
+recentBtn.addEventListener("click", function () {
+    recentDropdown.classList.toggle("hidden");
+});
