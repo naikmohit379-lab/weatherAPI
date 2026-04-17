@@ -1,5 +1,7 @@
+// OpenWeatherMap API key
 const apiKey = "02276dc7547322d009c6e76b147f399f";
 
+// Getting elements from HTML
 const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
 const locationBtn = document.getElementById("locationBtn");
@@ -19,21 +21,27 @@ const errorMessage = document.getElementById("errorMessage");
 const forecastContainer = document.getElementById("forecastContainer");
 const body = document.getElementById("body");
 
+// Variables used in the project
 let currentTempCelsius = null;
 let isCelsius = true;
 let recentCities = JSON.parse(localStorage.getItem("recentCities")) || [];
 
+// Load recent cities when page opens
+loadRecentCities();
 
+// Show error on UI
 function showError(message) {
     errorMessage.textContent = message;
     errorMessage.classList.remove("hidden");
 }
 
+// Clear old error
 function clearError() {
     errorMessage.textContent = "";
     errorMessage.classList.add("hidden");
 }
 
+// Search weather by city name
 searchBtn.addEventListener("click", function () {
     let city = cityInput.value.trim();
 
@@ -45,6 +53,7 @@ searchBtn.addEventListener("click", function () {
     getWeatherByCity(city);
 });
 
+// Fetch weather using city name
 async function getWeatherByCity(city) {
     clearError();
 
@@ -64,8 +73,13 @@ async function getWeatherByCity(city) {
         let lon = currentData.coord.lon;
 
         let forecastResponse = await fetch(
-            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
         );
+
+        if (!forecastResponse.ok) {
+            showError("Unable to fetch forecast data.");
+            return;
+        }
 
         let forecastData = await forecastResponse.json();
 
@@ -78,61 +92,7 @@ async function getWeatherByCity(city) {
     }
 }
 
-function displayCurrentWeather(data) {
-    let tempC = data.main.temp - 273.15;
-
-    currentTempCelsius = tempC;
-    isCelsius = true;
-
-    cityName.textContent = data.name + ", " + data.sys.country;
-    weatherDesc.textContent = data.weather[0].description;
-    temperature.textContent = tempC.toFixed(1) + "°C";
-    toggleUnitBtn.textContent = "switch to °F";
-
-    humidity.textContent = data.main.humidity + "%";
-    wind.textContent = data.wind.speed + " m/s";
-    condition.textContent = data.weather[0].main;
-
-    if (tempC > 40) {
-        weatherAlert.textContent = "Warning: extreme temperature above 40°C";
-        weatherAlert.classList.remove("hidden");
-    } else {
-        weatherAlert.classList.add("hidden");
-    }
-
-    if (data.weather[0].main.toLowerCase().includes("rain")) {
-        body.className = "bg-slate-700 text-white min-h-screen";
-    } else {
-        body.className = "bg-slate-900 text-white min-h-screen";
-    }
-}
-function displayForecast(data) {
-    forecastContainer.innerHTML = "";
-
-    let forecastList = data.list;
-    let shownDates = [];
-
-    for (let i = 0; i < forecastList.length; i++) {
-        let item = forecastList[i];
-        let date = item.dt_txt.split(" ")[0];
-
-        if (!shownDates.includes(date) && shownDates.length < 5) {
-            shownDates.push(date);
-
-            let temp = (item.main.temp - 273.15).toFixed(1);
-
-            forecastContainer.innerHTML += `
-                <div class="bg-slate-700 p-3 rounded text-center">
-                    <p class="font-semibold">${date}</p>
-                    <p class="mt-2">Temp: ${temp}°C</p>
-                    <p>Wind: ${item.wind.speed} m/s</p>
-                    <p>Humidity: ${item.main.humidity}%</p>
-                    <p class="mt-1 text-sm">${item.weather[0].main}</p>
-                </div>
-            `;
-        }
-    }
-}
+// Get weather using current location
 locationBtn.addEventListener("click", function () {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -150,12 +110,13 @@ locationBtn.addEventListener("click", function () {
     }
 });
 
+// Fetch weather using latitude and longitude
 async function getWeatherByLocation(lat, lon) {
     clearError();
 
     try {
         let currentResponse = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
         );
 
         if (!currentResponse.ok) {
@@ -166,8 +127,13 @@ async function getWeatherByLocation(lat, lon) {
         let currentData = await currentResponse.json();
 
         let forecastResponse = await fetch(
-             `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
         );
+
+        if (!forecastResponse.ok) {
+            showError("Unable to fetch forecast data.");
+            return;
+        }
 
         let forecastData = await forecastResponse.json();
 
@@ -179,6 +145,72 @@ async function getWeatherByLocation(lat, lon) {
         showError("Unable to fetch weather for your location.");
     }
 }
+
+// Show current weather on the page
+function displayCurrentWeather(data) {
+    // Since units=metric is used, temperature is already in Celsius
+    let tempC = data.main.temp;
+
+    currentTempCelsius = tempC;
+    isCelsius = true;
+
+    cityName.textContent = data.name + ", " + data.sys.country;
+    weatherDesc.textContent = data.weather[0].description;
+    temperature.textContent = tempC.toFixed(1) + "°C";
+    toggleUnitBtn.textContent = "Switch to °F";
+
+    humidity.textContent = data.main.humidity + "%";
+    wind.textContent = data.wind.speed + " m/s";
+    condition.textContent = data.weather[0].main;
+
+    // Show custom alert if temperature is above 40 degree Celsius
+    if (tempC > 40) {
+        weatherAlert.textContent = "Warning: Extreme temperature above 40°C";
+        weatherAlert.classList.remove("hidden");
+    } else {
+        weatherAlert.classList.add("hidden");
+    }
+
+    // Change background if weather is rainy
+    if (data.weather[0].main.toLowerCase().includes("rain")) {
+        body.className = "bg-slate-700 text-white min-h-screen";
+    } else {
+        body.className = "bg-slate-900 text-white min-h-screen";
+    }
+}
+
+// Show 5-day forecast on the page
+function displayForecast(data) {
+    forecastContainer.innerHTML = "";
+
+    let forecastList = data.list;
+    let shownDates = [];
+
+    for (let i = 0; i < forecastList.length; i++) {
+        let item = forecastList[i];
+        let date = item.dt_txt.split(" ")[0];
+
+        // Show only one forecast card per day
+        if (!shownDates.includes(date) && shownDates.length < 5) {
+            shownDates.push(date);
+
+            // Since units=metric is used, temperature is already in Celsius
+            let temp = item.main.temp.toFixed(1);
+
+            forecastContainer.innerHTML += `
+                <div class="bg-slate-700 p-3 rounded text-center">
+                    <p class="font-semibold">${date}</p>
+                    <p class="mt-2">Temp: ${temp}°C</p>
+                    <p>Wind: ${item.wind.speed} m/s</p>
+                    <p>Humidity: ${item.main.humidity}%</p>
+                    <p class="mt-1 text-sm">${item.weather[0].main}</p>
+                </div>
+            `;
+        }
+    }
+}
+
+// Toggle current temperature between Celsius and Fahrenheit
 toggleUnitBtn.addEventListener("click", function () {
     if (currentTempCelsius === null) return;
 
@@ -193,15 +225,20 @@ toggleUnitBtn.addEventListener("click", function () {
         isCelsius = true;
     }
 });
+
+// Save searched city in localStorage
 function saveRecentCity(city) {
     city = city.trim();
 
+    // Remove duplicate city if already present
     recentCities = recentCities.filter(function (item) {
         return item.toLowerCase() !== city.toLowerCase();
     });
 
+    // Add new city at the beginning
     recentCities.unshift(city);
 
+    // Keep only last 5 cities
     if (recentCities.length > 5) {
         recentCities.pop();
     }
@@ -210,6 +247,7 @@ function saveRecentCity(city) {
     loadRecentCities();
 }
 
+// Load recent cities into dropdown
 function loadRecentCities() {
     recentDropdown.innerHTML = "";
 
@@ -235,6 +273,7 @@ function loadRecentCities() {
     }
 }
 
+// Show or hide recent cities dropdown
 recentBtn.addEventListener("click", function () {
     recentDropdown.classList.toggle("hidden");
 });
