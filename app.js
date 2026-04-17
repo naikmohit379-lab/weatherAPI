@@ -133,3 +133,49 @@ function displayForecast(data) {
         }
     }
 }
+locationBtn.addEventListener("click", function () {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                let lat = position.coords.latitude;
+                let lon = position.coords.longitude;
+                getWeatherByLocation(lat, lon);
+            },
+            function () {
+                showError("Unable to get your location.");
+            }
+        );
+    } else {
+        showError("Geolocation is not supported in your browser.");
+    }
+});
+
+async function getWeatherByLocation(lat, lon) {
+    clearError();
+
+    try {
+        let currentResponse = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
+        );
+
+        if (!currentResponse.ok) {
+            showError("Unable to fetch weather for your location.");
+            return;
+        }
+
+        let currentData = await currentResponse.json();
+
+        let forecastResponse = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
+        );
+
+        let forecastData = await forecastResponse.json();
+
+        displayCurrentWeather(currentData);
+        displayForecast(forecastData);
+        saveRecentCity(currentData.name);
+
+    } catch (error) {
+        showError("Unable to fetch weather for your location.");
+    }
+}
