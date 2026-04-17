@@ -29,3 +29,9 @@
 - Friendly **error messages** on the UI (no JavaScript alert boxes)
 - **Custom alert** for extreme heat (above 40°C)
  
+
+ ## API Reference
+
+- OpenWeatherMap API: https://openweathermap.org/api  
+- Current weather endpoint: https://api.openweathermap.org/data/2.5/weather  
+- 5-day / 3-hour forecast endpoint: https://api.openweathermap.org/data/2.5/forecast [web:33][web:36]
