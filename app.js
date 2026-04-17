@@ -193,3 +193,44 @@ toggleUnitBtn.addEventListener("click", function () {
         isCelsius = true;
     }
 });
+function saveRecentCity(city) {
+    city = city.trim();
+
+    recentCities = recentCities.filter(function (item) {
+        return item.toLowerCase() !== city.toLowerCase();
+    });
+
+    recentCities.unshift(city);
+
+    if (recentCities.length > 5) {
+        recentCities.pop();
+    }
+
+    localStorage.setItem("recentCities", JSON.stringify(recentCities));
+    loadRecentCities();
+}
+
+function loadRecentCities() {
+    recentDropdown.innerHTML = "";
+
+    if (recentCities.length === 0) {
+        recentBtn.classList.add("hidden");
+        return;
+    }
+
+    recentBtn.classList.remove("hidden");
+
+    for (let i = 0; i < recentCities.length; i++) {
+        let btn = document.createElement("button");
+        btn.textContent = recentCities[i];
+        btn.className = "block w-full text-left px-3 py-2 bg-slate-600 rounded hover:bg-slate-500";
+
+        btn.addEventListener("click", function () {
+            cityInput.value = recentCities[i];
+            getWeatherByCity(recentCities[i]);
+            recentDropdown.classList.add("hidden");
+        });
+
+        recentDropdown.appendChild(btn);
+    }
+}
